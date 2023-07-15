@@ -3,10 +3,12 @@ import { FormEvent, useRef, useState } from 'react';
 import Layout from '@/components/layout';
 
 import globalStyles from '@/app/styles.module.css';
+import styles from '@/components/landing/styles.module.css';
 
 import { RootState } from '@/store';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { incrementRound, setRounds, setUsername } from '@/store/slices/game';
+import { setModal } from '@/store/slices/app';
 
 import { validateLandingForm } from '@/utils';
 
@@ -52,6 +54,13 @@ export default function Landing() {
         dispatch(setUsername(validatedForm.username));
         dispatch(setRounds(validatedForm.rounds));
         dispatch(incrementRound());
+    }
+
+    function deleteAllData() {
+        localStorage.removeItem('who-sings-matches');
+        localStorage.removeItem('who-sings-username');
+
+        window.location.reload();
     }
 
     return (
@@ -102,7 +111,7 @@ export default function Landing() {
                         </div>
                     </div>
                 )}
-                <div className={globalStyles.spacer}>
+                <div className={globalStyles.spacer + ' ' + styles.row}>
                     <button
                         type='submit'
                         className={globalStyles.button}
@@ -110,6 +119,26 @@ export default function Landing() {
                     >
                         Play Game
                     </button>
+                    <div
+                        className={globalStyles.button + ' ' + globalStyles.buttonSecondary}
+                        onClick={() => dispatch(setModal('matches'))}
+                    >
+                        Matches
+                    </div>
+                    <div
+                        className={globalStyles.button + ' ' + globalStyles.buttonSecondary}
+                        onClick={() => dispatch(setModal('leaderboard'))}
+                    >
+                        Leaderboard
+                    </div>
+                </div>
+                <div className={globalStyles.spacer}>
+                    <div
+                        className={styles.deleteData}
+                        onClick={deleteAllData}
+                    >
+                        Delete all data
+                    </div>
                 </div>
             </form>
         </Layout>

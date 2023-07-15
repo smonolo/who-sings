@@ -20,6 +20,7 @@ body {
     padding: 0;
     background: var(--color-black);
     color: var(--color-white);
+    position: relative;
 }
 
 .label {
@@ -42,7 +43,7 @@ body {
 .button {
     width: fit-content;
     outline: none;
-    border: none;
+    border: 1px solid var(--color-brand);
     border-radius: 10px;
     background-color: var(--color-brand);
     color: var(--color-black);
@@ -53,6 +54,12 @@ body {
     display: block;
 }
 
+.buttonSecondary {
+    background-color: var(--color-transparent);
+    border: 1px solid var(--color-brand);
+    color: var(--color-brand);
+}
+
 .error {
     color: var(--color-red);
 }
@@ -61,7 +68,23 @@ body {
     margin-top: 40px;
 }
 
+.smallSpacer {
+    margin-top: 20px;
+}
+
 .center {
     width: fit-content;
     margin: 0 auto;
+}
+
+.card {
+    width: 100%;
+    padding: 25px;
+    box-sizing: border-box;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+}
+
+.text {
+    color: var(--color-light-gray);
 }

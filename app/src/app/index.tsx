@@ -1,8 +1,10 @@
-import { useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 
 import Landing from '@/components/landing';
 import Round from '@/components/round';
 import Results from '@/components/results';
+import MatchesModal from '@/components/matches-modal';
+import LeaderboardModal from '@/components/leaderboard-modal';
 
 import { RootState } from '@/store';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -28,7 +30,11 @@ export default function App() {
 
     if (!hasGameData) {
         return (
-            <Landing />
+            <Fragment>
+                <Landing />
+                <MatchesModal />
+                <LeaderboardModal />
+            </Fragment>
         );
     }
 

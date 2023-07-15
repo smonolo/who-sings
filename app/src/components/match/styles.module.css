@@ -1,0 +1,13 @@
+.grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: calc(30% - 5px) calc(70% - 5px);
+    gap: 10px;
+}
+
+.card {
+    padding: 15px 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}

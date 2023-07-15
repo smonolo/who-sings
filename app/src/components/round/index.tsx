@@ -72,6 +72,7 @@ export default function Round() {
         }));
 
         setTimeout(() => {
+            setData(initialData);
             dispatch(incrementRound());
             setSelectionStatus('');
         }, 2000);
@@ -101,7 +102,7 @@ export default function Round() {
                 {score} points
             </div>
             <div className={globalStyles.spacer}>
-                <div className={styles.card}>
+                <div className={globalStyles.card + ' ' + styles.card}>
                     {data.lyrics}
                 </div>
             </div>
@@ -110,7 +111,7 @@ export default function Round() {
                     {data.artists.map(((artist, index) => (
                         <div
                             key={index}
-                            className={styles.card + ' ' + styles.cardSelection}
+                            className={globalStyles.card + ' ' + styles.card + ' ' + styles.cardSelection}
                             onClick={() => selectArtist(artist)}
                         >
                             {artist}

@@ -1,13 +1,12 @@
-import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-interface Selection {
+export interface Selection {
     selected: string;
     correct: string;
     score: number;
 }
 
-export interface GameState {
+interface GameState {
     username: string;
     rounds: number;
     currentRound: number;

@@ -1,0 +1,21 @@
+.row {
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.deleteData {
+    font-size: 12px;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+    width: fit-content;
+    margin: 0 auto;
+    color: var(--color-light-gray);
+    transition: color .1s;
+}
+
+.deleteData:hover {
+    color: var(--color-red);
+}
