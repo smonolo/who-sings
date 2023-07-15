@@ -42,7 +42,7 @@ export default function MatchesModal() {
                             className={styles.badge + ' ' + (filter === 'user' ? styles.activeBadge : '')}
                             onClick={() => setFilter('user')}
                         >
-                            My Games
+                            My Matches
                         </div>
                     )}
                 </div>
@@ -52,7 +52,12 @@ export default function MatchesModal() {
                     {matches}
                 </div>
             )}
-            {Array.isArray(matches) && (
+            {matches.length === 0 && (
+                <div className={globalStyles.smallSpacer}>
+                    No matches to show.
+                </div>
+            )}
+            {matches.length > 0 && Array.isArray(matches) && (
                 <div className={styles.list + ' ' + globalStyles.smallSpacer}>
                     {matches.map((match) => (
                         <Match

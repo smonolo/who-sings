@@ -23,17 +23,38 @@ const initialData: Data = {
     lyrics: '',
     artists: [],
     artist: ''
-}
+};
+
+const roundDuration = 15;
 
 export default function Round() {
     const [data, setData] = useState<Data>(initialData);
     const [selectionStatus, setSelectionStatus] = useState<string>('');
+    const [countdown, setCountdown] = useState<number>(roundDuration);
 
     const { currentRound, rounds, score } = useAppSelector((state: RootState) => state.game);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
         fetchRoundData();
+    }, [currentRound]);
+
+    useEffect(() => {
+        if (countdown > 0) {
+            if (data.loaded) {
+                const interval = setTimeout(() => {
+                    setCountdown(countdown => countdown - 1);
+                }, 1000);
+        
+                return () => clearTimeout(interval);
+            }
+        } else {
+            endWithoutSelection();
+        }
+    }, [countdown, data]);
+
+    useEffect(() => {
+        setCountdown(roundDuration);
     }, [currentRound]);
 
     async function fetchRoundData() {
@@ -55,6 +76,25 @@ export default function Round() {
         setData({ loaded: true, ...formattedData });
     }
 
+    function nextRound() {
+        setTimeout(() => {
+            setData(initialData);
+            dispatch(incrementRound());
+            setSelectionStatus('');
+        }, 1000);
+    }
+
+    function endWithoutSelection() {
+        setSelectionStatus('error');
+        dispatch(updateSelections({
+            selected: 'Not selected',
+            correct: data.artist,
+            score: 0
+        }));
+
+        nextRound();
+    }
+
     function selectArtist(name: string) {
         const isCorrectAnswer = name === data.artist;
 
@@ -71,11 +111,7 @@ export default function Round() {
             score: isCorrectAnswer ? 100 : 0
         }));
 
-        setTimeout(() => {
-            setData(initialData);
-            dispatch(incrementRound());
-            setSelectionStatus('');
-        }, 2000);
+        nextRound();
     }
 
     if (!data.loaded) {
@@ -96,7 +132,7 @@ export default function Round() {
     return (
         <Layout
             title='Who Sings?'
-            subtitle={`Round ${currentRound}/${rounds}`}
+            subtitle={`Round ${currentRound}/${rounds} | ${countdown} seconds left`}
         >
             <div className={styles.points}>
                 {score} points

@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export function shuffleArray(array: string[]): string[] {
     for (let i = array.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
@@ -8,6 +10,14 @@ export function shuffleArray(array: string[]): string[] {
     }
 
     return array;
+}
+
+export function formatTime(time: number): string {
+    return moment(time).format('MMM DD, yyyy, hh:mm');
+}
+
+export function getDuration(milliseconds: number): number {
+    return Math.floor(moment.duration(milliseconds).asSeconds());
 }
 
 interface ValidateLandingFormResponse {

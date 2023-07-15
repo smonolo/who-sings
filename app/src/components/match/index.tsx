@@ -1,9 +1,9 @@
-import moment from 'moment';
-
 import globalStyles from '@/app/styles.module.css';
 import styles from '@/components/match/styles.module.css';
 
 import { Match as MatchType } from '@/lib/game';
+
+import { formatTime, getDuration } from '@/utils';
 
 interface MatchRowProps {
     label: string;
@@ -30,8 +30,8 @@ export default function Match(props: MatchType) {
             value: props.username
         },
         {
-            label: 'Finish Time',
-            value: moment(props.finishTime).format('MMM DD, yyyy, hh:mm')
+            label: 'Duration',
+            value: `${getDuration(props.finishTime - props.startTime)}s (${formatTime(props.startTime)} -> ${formatTime(props.finishTime)})`
         },
         {
             label: 'Score',

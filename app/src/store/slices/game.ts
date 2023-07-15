@@ -12,6 +12,7 @@ interface GameState {
     currentRound: number;
     score: number;
     selections: Selection[];
+    startTime: number;
 }
 
 const initialState: GameState = {
@@ -19,7 +20,8 @@ const initialState: GameState = {
     rounds: 0,
     currentRound: 0,
     score: 0,
-    selections: []
+    selections: [],
+    startTime: 0
 };
 
 export const gameSlice = createSlice({
@@ -45,6 +47,9 @@ export const gameSlice = createSlice({
         updateSelections: (state, action: PayloadAction<Selection>) => {
             state.selections = [...state.selections, action.payload];
         },
+        setStartTime: state => {
+            state.startTime = new Date().getTime();
+        },
         resetGameData: state => {
             const { rounds, currentRound, score, selections } = initialState;
 
@@ -62,6 +67,7 @@ export const {
     incrementRound,
     incrementScore,
     updateSelections,
+    setStartTime,
     resetGameData
 } = gameSlice.actions;
 

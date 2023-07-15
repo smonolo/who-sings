@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { v4 as uuidv4 } from 'uuid';
 
 import Layout from "@/components/layout";
+import Match from "@/components/match";
 
 import { RootState } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -12,15 +13,16 @@ import globalStyles from '@/app/styles.module.css';
 export default function Results() {
     const game = useAppSelector((state: RootState) => state.game);
     const dispatch = useAppDispatch();
+    const match = {
+        id: uuidv4(),
+        startTime: game.startTime,
+        finishTime: new Date().getTime(),
+        username: game.username,
+        score: game.score,
+        selections: game.selections
+    };
 
     useEffect(() => {
-        const match = {
-            id: uuidv4(),
-            finishTime: new Date().getTime(),
-            username: game.username,
-            score: game.score,
-            selections: game.selections
-        };
         const storageItemName = 'who-sings-matches';
         const storedMatches = localStorage.getItem(storageItemName);
 
@@ -39,7 +41,7 @@ export default function Results() {
             subtitle="Let's see how you did."
         >
             <div className={globalStyles.spacer}>
-                {game.score} points!
+                <Match {...match} />
             </div>
             <div className={globalStyles.spacer}>
                 <button

@@ -1,0 +1,21 @@
+.table {
+    width: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.table th,
+.table td {
+    padding: 5px 10px;
+    box-sizing: border-box;
+}
+
+.table th {
+    text-align: left;
+}
+
+.table td {
+    color: var(--color-light-gray);
+}

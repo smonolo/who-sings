@@ -7,7 +7,7 @@ import styles from '@/components/landing/styles.module.css';
 
 import { RootState } from '@/store';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { incrementRound, setRounds, setUsername } from '@/store/slices/game';
+import { incrementRound, setRounds, setStartTime, setUsername } from '@/store/slices/game';
 import { setModal } from '@/store/slices/app';
 
 import { validateLandingForm } from '@/utils';
@@ -54,6 +54,7 @@ export default function Landing() {
         dispatch(setUsername(validatedForm.username));
         dispatch(setRounds(validatedForm.rounds));
         dispatch(incrementRound());
+        dispatch(setStartTime());
     }
 
     function deleteAllData() {
@@ -111,7 +112,7 @@ export default function Landing() {
                         </div>
                     </div>
                 )}
-                <div className={globalStyles.spacer + ' ' + styles.row}>
+                <div className={styles.row}>
                     <button
                         type='submit'
                         className={globalStyles.button}
