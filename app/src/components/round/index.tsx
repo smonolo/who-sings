@@ -166,6 +166,10 @@ export default function Round() {
                     ))}
                 </div>
             </div>
+            <div className={styles.info}>
+                <i className='bi bi-info-circle' />
+                Hover over text to reveal hidden lyrics
+            </div>
             <div className={globalStyles.spacer}>
                 <div className={styles.row}>
                     {data.artists.map(((artist, index) => (

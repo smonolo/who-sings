@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@latest/font/bootstrap-icons.css");
 
 :root {
     --color-white: #fff;
@@ -7,7 +8,7 @@
     --color-light-gray: #aaa;
     --color-gray: #888;
     --color-border: #222;
-    --color-card: #080808;
+    --color-card: #0a0a0a;
     --color-black: #000;
 }
 

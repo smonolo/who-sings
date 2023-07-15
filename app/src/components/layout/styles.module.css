@@ -16,7 +16,7 @@
 }
 
 .title {
-    font-size: 30px;
+    font-size: 26px;
     font-weight: 700;
     text-align: center;
 }
@@ -26,4 +26,11 @@
     text-align: center;
     color: var(--color-light-gray);
     margin-top: 10px;
+}
+
+@media (max-width: 800px) {
+    .box {
+        width: 90%;
+        padding: 50px 30px;
+    }
 }

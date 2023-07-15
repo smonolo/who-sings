@@ -8,9 +8,16 @@ import { formatTime, getDuration } from '@/utils';
 interface MatchRowProps {
     label: string;
     value: string | number;
+    divider?: boolean;
 }
 
 function MatchRow(props: MatchRowProps) {
+    if (props.divider) {
+        return (
+            <div className={styles.divider} />
+        );
+    }
+    
     return (
         <div className={styles.grid}>
             <div className={globalStyles.text}>
@@ -38,8 +45,9 @@ export default function Match(props: MatchType) {
             value: `${props.score}/${maxScore} (${Math.floor(props.score / maxScore * 100)}%, ${rounds} round${rounds > 1 ? 's' : ''})`
         },
         {
-            label: '----------',
-            value: '----------------------------'
+            label: '',
+            value: '',
+            divider: true
         },
         ...props.selections.map((s, i) => ({
             label: `Round #${i + 1}`,
