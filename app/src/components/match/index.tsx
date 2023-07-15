@@ -37,6 +37,10 @@ export default function Match(props: MatchType) {
             label: 'Score',
             value: `${props.score}/${maxScore} (${Math.floor(props.score / maxScore * 100)}%, ${rounds} round${rounds > 1 ? 's' : ''})`
         },
+        {
+            label: '----------',
+            value: '----------------------------'
+        },
         ...props.selections.map((s, i) => ({
             label: `Round #${i + 1}`,
             value: `${s.score === 100 ? 'Correct!' : 'Wrong!'} (${s.correct}, ${s.selected})`

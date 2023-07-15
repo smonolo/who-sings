@@ -7,7 +7,8 @@ const router = Router();
 
 router.get('/data', async (req, res) => {
     const round = parseInt(req.query.round as string, 10);
-    const chartTracks = await getChartTracks(round);
+    const { chartCountry, chartName } = req.query as { [x: string]: string };
+    const chartTracks = await getChartTracks(round, { chartCountry, chartName });
 
     if (chartTracks.error) {
         return res.status(500).json(chartTracks);

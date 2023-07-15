@@ -91,7 +91,7 @@ export default function Landing() {
                 </div>
                 <div className={globalStyles.spacer}>
                     <div className={globalStyles.label}>
-                        How many rounds? (1-10)
+                        Rounds
                     </div>
                     <input
                         ref={roundsRef}
@@ -104,6 +104,9 @@ export default function Landing() {
                         disabled={state.loading}
                         required
                     />
+                    <div className={globalStyles.sublabel}>
+                        Maximum 10 rounds allowed.
+                    </div>
                 </div>
                 {state.error && (
                     <div className={globalStyles.spacer}>

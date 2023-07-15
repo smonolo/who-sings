@@ -1,6 +1,19 @@
+.pointsRow {
+    width: fit-content;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 15px auto 0 auto;
+}
+
+.pointsRow > div {
+    display: flex;
+    align-items: center;
+}
+
 .points {
     width: fit-content;
-    margin: 15px auto 0 auto;
+    margin: 0 auto;
     border: 1px solid var(--color-brand);
     box-sizing: border-box;
     padding: 5px 10px;
@@ -9,25 +22,46 @@
     font-weight: 600;
 }
 
+.selectionSuccess {
+    color: var(--color-brand);
+}
+
+.selectionError {
+    color: var(--color-red);
+}
+
 .spacer {
     margin-top: 40px;
 }
 
 .card {
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 25px;
-    box-sizing: border-box;
-    border: 1px solid var(--color-border);
-    border-radius: 10px;
+}
+
+.cardLyrics {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.cardLyrics > div:nth-child(1),
+.cardLyrics > div:nth-child(3) {
+    font-size: 14px;
+    color: var(--color-border);
+}
+
+.cardLyrics > div:nth-child(2) {
+    font-size: 20px;
+    font-weight: 600;
 }
 
 .cardSelection {
     cursor: pointer;
     padding: 15px 25px;
     transition: border-color .1s;
+    text-align: center;
 }
 
 .cardSelection:hover {
@@ -39,18 +73,6 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
-}
-
-.selectionSuccess {
-    font-size: 16px;
-    text-align: center;
-    color: var(--color-brand);
-}
-
-.selectionError {
-    font-size: 16px;
-    text-align: center;
-    color: var(--color-red);
 }
 
 .loading {

@@ -8,24 +8,26 @@ import { incrementRound, incrementScore, updateSelections } from '@/store/slices
 
 import { shuffleArray } from '@/utils';
 
+import config from '@/config.json';
+
 import styles from '@/components/round/styles.module.css';
 import globalStyles from '@/app/styles.module.css';
 
 interface Data {
     loaded: boolean;
-    lyrics: string;
+    lyrics: string[];
     artists: string[];
     artist: string;
 }
 
 const initialData: Data = {
     loaded: false,
-    lyrics: '',
+    lyrics: [],
     artists: [],
     artist: ''
 };
 
-const roundDuration = 15;
+const { game: { roundDuration } } = config;
 
 export default function Round() {
     const [data, setData] = useState<Data>(initialData);
@@ -58,7 +60,12 @@ export default function Round() {
     }, [currentRound]);
 
     async function fetchRoundData() {
-        const roundDataResponse = await fetch(`http://localhost:8080/game/data?round=${currentRound}`, {
+        const { game: { chartCountry, chartName }, app: { apiUrl } } = config;
+        const roundDataResponse = await fetch(apiUrl + 'game/data?' + new URLSearchParams({
+            round: currentRound.toString(),
+            chartCountry: chartCountry,
+            chartName: chartName
+        }), {
             method: 'get'
         });
         const roundData = await roundDataResponse.json();
@@ -68,7 +75,7 @@ export default function Round() {
         }
 
         const formattedData = {
-            lyrics: roundData.lyrics.split('\n')[0],
+            lyrics: roundData.lyrics.split('\n').splice(0, 3),
             artists: shuffleArray([...roundData.artists, roundData.artist]),
             artist: roundData.artist
         };
@@ -118,7 +125,7 @@ export default function Round() {
         return (
             <Layout
                 title='Who Sings?'
-                subtitle={`Round ${currentRound}/${rounds}`}
+                subtitle={`Round ${currentRound}/${rounds} | ${countdown}s`}
             >
                 <div className={globalStyles.spacer}>
                     <div className={styles.loading}>
@@ -132,14 +139,31 @@ export default function Round() {
     return (
         <Layout
             title='Who Sings?'
-            subtitle={`Round ${currentRound}/${rounds} | ${countdown} seconds left`}
+            subtitle={`Round ${currentRound}/${rounds} | ${countdown}s`}
         >
-            <div className={styles.points}>
-                {score} points
+            <div className={styles.pointsRow}>
+                <div />
+                <div className={styles.points}>
+                    {score} points
+                </div>
+                {selectionStatus === 'success' && (
+                    <div className={styles.selectionSuccess}>
+                        Correct!
+                    </div>
+                )}
+                {selectionStatus === 'error' && (
+                    <div className={styles.selectionError}>
+                        Wrong!
+                    </div>
+                )}
             </div>
             <div className={globalStyles.spacer}>
-                <div className={globalStyles.card + ' ' + styles.card}>
-                    {data.lyrics}
+                <div className={globalStyles.card + ' ' + styles.card + ' ' + styles.cardLyrics}>
+                    {data.lyrics.map((line, index) => (
+                        <div key={index}>
+                            {line}
+                        </div>
+                    ))}
                 </div>
             </div>
             <div className={globalStyles.spacer}>
@@ -155,20 +179,6 @@ export default function Round() {
                     )))}
                 </div>
             </div>
-            {selectionStatus === 'success' && (
-                <div className={globalStyles.spacer}>
-                    <div className={styles.selectionSuccess}>
-                        Correct! +100 points!
-                    </div>
-                </div>
-            )}
-            {selectionStatus === 'error' && (
-                <div className={globalStyles.spacer}>
-                    <div className={styles.selectionError}>
-                        Incorrect! It was {data.artist}!
-                    </div>
-                </div>
-            )}
         </Layout>
     );
 }

@@ -7,13 +7,12 @@
 }
 
 .box {
-    width: 600px;
+    width: 650px;
     height: fit-content;
-    background-color: #080808;
-    padding: 50px;
+    background-color: var(--color-card);
+    padding: 75px;
     box-sizing: border-box;
-    border-radius: 15px;
-    border: 1px solid var(--color-border);
+    border-radius: 20px;
 }
 
 .title {

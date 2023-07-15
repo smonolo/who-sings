@@ -2,13 +2,19 @@ import axios from 'axios';
 
 import { apiKey, apiUrl } from '../utils/constants';
 
-export async function getChartTracks(round: number) {
+interface ChartTracksOptions {
+    chartCountry: string;
+    chartName: string;
+}
+
+export async function getChartTracks(round: number, options: ChartTracksOptions) {
+    const { chartCountry, chartName } = options;
     const response = await axios.get(
         apiUrl + 'chart.tracks.get?' + new URLSearchParams({
-            chart_name: 'hot',
+            chart_name: chartName,
             page: round.toString(),
             page_size: '1',
-            country: 'it',
+            country: chartCountry,
             f_has_lyrics: '1',
             apikey: apiKey
         })

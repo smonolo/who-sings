@@ -6,8 +6,10 @@
 }
 
 .card {
-    padding: 15px 25px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 5px;
+    border: none;
+    background-color: #111;
 }
