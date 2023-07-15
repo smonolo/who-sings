@@ -148,7 +148,7 @@ export default function Round() {
                         <div
                             key={index}
                             className={globalStyles.card + ' ' + styles.card + ' ' + styles.cardSelection}
-                            onClick={() => selectArtist(artist)}
+                            onClick={() => !selectionStatus && selectArtist(artist)}
                         >
                             {artist}
                         </div>
