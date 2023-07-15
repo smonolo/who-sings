@@ -1,0 +1,11 @@
+# dependencies
+node_modules/
+
+# output
+dist/
+
+# environment
+*.env*
+
+# yarn
+yarn-error.log

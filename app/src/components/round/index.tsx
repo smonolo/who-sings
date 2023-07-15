@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { RootState } from '../../store';
 import { useAppSelector } from '../../store/hooks';
 
-import { getRoundData } from '../../lib/api';
+import { shuffleArray } from '../../utils';
 
 import styles from './styles.module.css';
 
@@ -28,29 +28,19 @@ export default function Round() {
         fetchRoundData();
     }, [currentRound]);
 
-    function shuffleArtistsList(artists: string[]) {
-        let currentIndex = artists.length, randomIndex;
-
-        while (currentIndex !== 0) {
-            randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex--;
-
-            [artists[currentIndex], artists[randomIndex]] = [artists[randomIndex], artists[currentIndex]];
-        }
-
-        return artists;
-    }
-
     const fetchRoundData = async () => {
-        const roundData = await getRoundData(currentRound);
+        const roundDataResponse = await fetch(`http://localhost:8080/game/data?round=${currentRound}`, {
+            method: 'get'
+        });
+        const roundData = await roundDataResponse.json();
 
         if (roundData.error) {
             return;
         }
 
         const formattedData = {
-            lyrics: roundData.lyrics,
-            artists: shuffleArtistsList([...roundData.artists, roundData.artist]),
+            lyrics: roundData.lyrics.split('\n')[Math.floor(Math.random() * 5) + 1],
+            artists: shuffleArray([...roundData.artists, roundData.artist]),
             artist: roundData.artist
         };
 
