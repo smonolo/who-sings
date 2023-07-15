@@ -1,12 +1,14 @@
 import { FormEvent, useRef, useState } from 'react';
 
-import Layout from '../layout';
+import Layout from '@/components/layout';
 
-import globalStyles from '../../app/styles.module.css';
+import globalStyles from '@/app/styles.module.css';
 
-import { RootState } from '../../store';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { incrementRound, setRounds, setUsername } from '../../store/slices/game';
+import { RootState } from '@/store';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { incrementRound, setRounds, setUsername } from '@/store/slices/game';
+
+import { validateLandingForm } from '@/utils';
 
 interface State {
     loading: boolean;
@@ -39,37 +41,16 @@ export default function Landing() {
             return setState({ ...initialState, error: 'Could not find refs.' });
         }
 
-        const trimmedUsername = username.value.trim();
+        const validatedForm = validateLandingForm(username.value, rounds.value);
 
-        if (!trimmedUsername) {
-            return setState({ ...initialState, error: 'Username is required.' });
-        }
-
-        if (trimmedUsername.length < 3) {
-            return setState({ ...initialState, error: 'Username is too short, it must be at least 3 characters long.' });
-        }
-
-        if (trimmedUsername.length > 20) {
-            return setState({ ...initialState, error: 'Username is too long, it must be maximum 20 characters long.' });
-        }
-
-        if (!rounds.value) {
-            return setState({ ...initialState, error: 'Rounds are required.' });
-        }
-
-        const roundsNumber = parseInt(rounds.value, 10);
-
-        if (roundsNumber < 1) {
-            return setState({ ...initialState, error: 'You must play at least 1 round.' });
-        }
-
-        if (roundsNumber > 10) {
-            return setState({ ...initialState, error: 'You can play maximum 10 rounds.' });
+        if (typeof validatedForm === 'string') {
+            return setState({ ...initialState, error: validatedForm });
         }
 
         formRef.current.reset();
-        dispatch(setUsername(trimmedUsername));
-        dispatch(setRounds(roundsNumber));
+
+        dispatch(setUsername(validatedForm.username));
+        dispatch(setRounds(validatedForm.rounds));
         dispatch(incrementRound());
     }
 

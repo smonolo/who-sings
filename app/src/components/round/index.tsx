@@ -1,23 +1,25 @@
 import { useEffect, useState } from 'react';
 
-import Layout from '../layout';
+import Layout from '@/components/layout';
 
-import { RootState } from '../../store';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { incrementRound, incrementScore } from '../../store/slices/game';
+import { RootState } from '@/store';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { incrementRound, incrementScore, updateSelections } from '@/store/slices/game';
 
-import { shuffleArray } from '../../utils';
+import { shuffleArray } from '@/utils';
 
-import styles from './styles.module.css';
-import globalStyles from '../../app/styles.module.css';
+import styles from '@/components/round/styles.module.css';
+import globalStyles from '@/app/styles.module.css';
 
 interface Data {
+    loaded: boolean;
     lyrics: string;
     artists: string[];
     artist: string;
 }
 
 const initialData: Data = {
+    loaded: false,
     lyrics: '',
     artists: [],
     artist: ''
@@ -50,21 +52,44 @@ export default function Round() {
             artist: roundData.artist
         };
 
-        setData(formattedData);
+        setData({ loaded: true, ...formattedData });
     }
 
     function selectArtist(name: string) {
-        if (name === data.artist) {
+        const isCorrectAnswer = name === data.artist;
+
+        if (isCorrectAnswer) {
             setSelectionStatus('success');
             dispatch(incrementScore());
         } else {
             setSelectionStatus('error');
         }
 
+        dispatch(updateSelections({
+            selected: name,
+            correct: data.artist,
+            score: isCorrectAnswer ? 100 : 0
+        }));
+
         setTimeout(() => {
             dispatch(incrementRound());
             setSelectionStatus('');
         }, 2000);
+    }
+
+    if (!data.loaded) {
+        return (
+            <Layout
+                title='Who Sings?'
+                subtitle={`Round ${currentRound}/${rounds}`}
+            >
+                <div className={globalStyles.spacer}>
+                    <div className={styles.loading}>
+                        Loading round...
+                    </div>
+                </div>
+            </Layout>
+        );
     }
 
     return (

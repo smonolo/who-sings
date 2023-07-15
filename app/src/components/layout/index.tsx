@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import styles from './styles.module.css';
+import styles from '@/components/layout/styles.module.css';
 
 interface Props {
     title: string;

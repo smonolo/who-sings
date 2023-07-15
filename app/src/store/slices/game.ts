@@ -1,18 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
+interface Selection {
+    selected: string;
+    correct: string;
+    score: number;
+}
+
 export interface GameState {
     username: string;
     rounds: number;
     currentRound: number;
     score: number;
+    selections: Selection[];
 }
 
 const initialState: GameState = {
     username: '',
     rounds: 0,
     currentRound: 0,
-    score: 0
+    score: 0,
+    selections: []
 };
 
 export const gameSlice = createSlice({
@@ -35,12 +43,16 @@ export const gameSlice = createSlice({
         incrementScore: state => {
             state.score += 100;
         },
+        updateSelections: (state, action: PayloadAction<Selection>) => {
+            state.selections = [...state.selections, action.payload];
+        },
         resetGameData: state => {
-            const { rounds, currentRound, score } = initialState;
+            const { rounds, currentRound, score, selections } = initialState;
 
             state.rounds = rounds;
             state.currentRound = currentRound;
             state.score = score;
+            state.selections = selections;
         }
     }
 });
@@ -50,6 +62,7 @@ export const {
     setRounds,
     incrementRound,
     incrementScore,
+    updateSelections,
     resetGameData
 } = gameSlice.actions;
 

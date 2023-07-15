@@ -1,14 +1,14 @@
 import { useEffect } from 'react';
 
-import Landing from '../components/landing';
-import Round from '../components/round';
-import Results from '../components/results';
+import Landing from '@/components/landing';
+import Round from '@/components/round';
+import Results from '@/components/results';
 
-import { RootState } from '../store';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { setUsername } from '../store/slices/game';
+import { RootState } from '@/store';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { setUsername } from '@/store/slices/game';
 
-import './styles.module.css';
+import '@/app/styles.module.css';
 
 export default function App() {
     const { username, rounds, currentRound } = useAppSelector((state: RootState) => state.game);

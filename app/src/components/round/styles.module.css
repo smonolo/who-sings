@@ -21,12 +21,13 @@
     padding: 25px;
     box-sizing: border-box;
     border: 1px solid var(--color-border);
-    border-radius: 5px;
+    border-radius: 10px;
     transition: border-color .1s;
 }
 
 .cardSelection {
     cursor: pointer;
+    padding: 15px 25px;
 }
 
 .cardSelection:hover {
@@ -41,13 +42,18 @@
 }
 
 .selectionSuccess {
-    font-size: 20px;
+    font-size: 16px;
     text-align: center;
     color: var(--color-brand);
 }
 
 .selectionError {
-    font-size: 20px;
+    font-size: 16px;
     text-align: center;
     color: var(--color-red);
+}
+
+.loading {
+    color: var(--color-light-gray);
+    text-align: center;
 }
