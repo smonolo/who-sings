@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
 
+import Layout from '../layout';
+
 import { RootState } from '../../store';
-import { useAppSelector } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { incrementRound, incrementScore } from '../../store/slices/game';
 
 import { shuffleArray } from '../../utils';
 
 import styles from './styles.module.css';
+import globalStyles from '../../app/styles.module.css';
 
 interface Data {
     lyrics: string;
@@ -21,14 +25,16 @@ const initialData: Data = {
 
 export default function Round() {
     const [data, setData] = useState<Data>(initialData);
+    const [selectionStatus, setSelectionStatus] = useState<string>('');
 
-    const { currentRound } = useAppSelector((state: RootState) => state.game);
+    const { currentRound, rounds, score } = useAppSelector((state: RootState) => state.game);
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         fetchRoundData();
     }, [currentRound]);
 
-    const fetchRoundData = async () => {
+    async function fetchRoundData() {
         const roundDataResponse = await fetch(`http://localhost:8080/game/data?round=${currentRound}`, {
             method: 'get'
         });
@@ -39,7 +45,7 @@ export default function Round() {
         }
 
         const formattedData = {
-            lyrics: roundData.lyrics.split('\n')[Math.floor(Math.random() * 5) + 1],
+            lyrics: roundData.lyrics.split('\n')[0],
             artists: shuffleArray([...roundData.artists, roundData.artist]),
             artist: roundData.artist
         };
@@ -47,30 +53,60 @@ export default function Round() {
         setData(formattedData);
     }
 
+    function selectArtist(name: string) {
+        if (name === data.artist) {
+            setSelectionStatus('success');
+            dispatch(incrementScore());
+        } else {
+            setSelectionStatus('error');
+        }
+
+        setTimeout(() => {
+            dispatch(incrementRound());
+            setSelectionStatus('');
+        }, 2000);
+    }
+
     return (
-        <div className={styles.container}>
-            <div className={styles.box}>
-                <div className={styles.title}>
-                    Who Sings?
-                </div>
-                <div className={styles.spacer}>
-                    <div className={styles.card}>
-                        {data.lyrics}
-                    </div>
-                </div>
-                <div className={styles.spacer}>
-                    <div className={styles.row}>
-                        {data.artists.map(((artist, index) => (
-                            <div
-                                key={index}
-                                className={styles.card}
-                            >
-                                {artist}
-                            </div>
-                        )))}
-                    </div>
+        <Layout
+            title='Who Sings?'
+            subtitle={`Round ${currentRound}/${rounds}`}
+        >
+            <div className={styles.points}>
+                {score} points
+            </div>
+            <div className={globalStyles.spacer}>
+                <div className={styles.card}>
+                    {data.lyrics}
                 </div>
             </div>
-        </div>
+            <div className={globalStyles.spacer}>
+                <div className={styles.row}>
+                    {data.artists.map(((artist, index) => (
+                        <div
+                            key={index}
+                            className={styles.card + ' ' + styles.cardSelection}
+                            onClick={() => selectArtist(artist)}
+                        >
+                            {artist}
+                        </div>
+                    )))}
+                </div>
+            </div>
+            {selectionStatus === 'success' && (
+                <div className={globalStyles.spacer}>
+                    <div className={styles.selectionSuccess}>
+                        Correct! +100 points!
+                    </div>
+                </div>
+            )}
+            {selectionStatus === 'error' && (
+                <div className={globalStyles.spacer}>
+                    <div className={styles.selectionError}>
+                        Incorrect! It was {data.artist}!
+                    </div>
+                </div>
+            )}
+        </Layout>
     );
 }

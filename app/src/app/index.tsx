@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 
 import Landing from '../components/landing';
 import Round from '../components/round';
+import Results from '../components/results';
 
 import { RootState } from '../store';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -38,6 +39,6 @@ export default function App() {
     }
 
     return (
-        <div>got game data</div>
+        <Results />
     );
 }

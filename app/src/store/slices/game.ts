@@ -32,8 +32,15 @@ export const gameSlice = createSlice({
         incrementRound: state => {
             state.currentRound += 1;
         },
-        incrementScoreByAmount: (state, action: PayloadAction<number>) => {
-            state.score += action.payload;
+        incrementScore: state => {
+            state.score += 100;
+        },
+        resetGameData: state => {
+            const { rounds, currentRound, score } = initialState;
+
+            state.rounds = rounds;
+            state.currentRound = currentRound;
+            state.score = score;
         }
     }
 });
@@ -42,7 +49,8 @@ export const {
     setUsername,
     setRounds,
     incrementRound,
-    incrementScoreByAmount
+    incrementScore,
+    resetGameData
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

@@ -1,10 +1,11 @@
 import { FormEvent, useRef, useState } from 'react';
 
-import styles from './styles.module.css';
+import Layout from '../layout';
+
 import globalStyles from '../../app/styles.module.css';
 
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { RootState } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { incrementRound, setRounds, setUsername } from '../../store/slices/game';
 
 interface State {
@@ -73,68 +74,63 @@ export default function Landing() {
     }
 
     return (
-        <div className={styles.container}>
-            <div className={styles.box}>
-                <div className={styles.title}>
-                    Who Sings
+        <Layout
+            title='Who Sings'
+            subtitle='A music quiz game by Stefano Monolo.'
+        >
+            <form
+                ref={formRef}
+                onSubmit={onGameDataSubmit}
+            >
+                <div className={globalStyles.spacer}>
+                    <div className={globalStyles.label}>
+                        Username
+                    </div>
+                    <input
+                        ref={usernameRef}
+                        type='text'
+                        className={globalStyles.input}
+                        placeholder='ProPlayer123'
+                        minLength={3}
+                        maxLength={20}
+                        disabled={state.loading}
+                        defaultValue={authUsername || ''}
+                        required
+                    />
                 </div>
-                <div className={styles.subtitle}>
-                    A music quiz game by Stefano Monolo.
+                <div className={globalStyles.spacer}>
+                    <div className={globalStyles.label}>
+                        How many rounds? (1-10)
+                    </div>
+                    <input
+                        ref={roundsRef}
+                        type='number'
+                        className={globalStyles.input}
+                        min={1}
+                        max={10}
+                        defaultValue={5}
+                        placeholder='5'
+                        disabled={state.loading}
+                        required
+                    />
                 </div>
-                <form
-                    ref={formRef}
-                    onSubmit={onGameDataSubmit}
-                >
-                    <div className={styles.spacer}>
-                        <div className={globalStyles.label}>
-                            Username
+                {state.error && (
+                    <div className={globalStyles.spacer}>
+                        <div className={globalStyles.error}>
+                            {state.error}
                         </div>
-                        <input
-                            ref={usernameRef}
-                            type='text'
-                            className={globalStyles.input}
-                            placeholder='ProPlayer123'
-                            minLength={3}
-                            maxLength={20}
-                            disabled={state.loading}
-                            defaultValue={authUsername || ''}
-                            required
-                        />
                     </div>
-                    <div className={styles.spacer}>
-                        <div className={globalStyles.label}>
-                            How many rounds? (1-10)
-                        </div>
-                        <input
-                            ref={roundsRef}
-                            type='number'
-                            className={globalStyles.input}
-                            min={1}
-                            max={10}
-                            defaultValue={5}
-                            placeholder='5'
-                            disabled={state.loading}
-                            required
-                        />
-                    </div>
-                    {state.error && (
-                        <div className={styles.spacer}>
-                            <div className={globalStyles.error}>
-                                {state.error}
-                            </div>
-                        </div>
-                    )}
-                    <div className={styles.spacer}>
-                        <button
-                            type='submit'
-                            className={globalStyles.button}
-                            disabled={state.loading}
-                        >
-                            Play Game
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+                )}
+                <div className={globalStyles.spacer}>
+                    <button
+                        type='submit'
+                        className={globalStyles.button}
+                        disabled={state.loading}
+                    >
+                        Play Game
+                    </button>
+                </div>
+            </form>
+        </Layout>
     );
 }

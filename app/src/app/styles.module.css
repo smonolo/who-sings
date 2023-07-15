@@ -5,7 +5,7 @@
     --color-black: #000;
     --color-brand: #ff5353;
     --color-light-gray: #aaa;
-    --color-red: red;
+    --color-red: #eb4034;
     --color-border: #222;
 }
 
@@ -52,4 +52,8 @@ body {
 
 .error {
     color: var(--color-red);
+}
+
+.spacer {
+    margin-top: 40px;
 }
