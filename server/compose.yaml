@@ -3,4 +3,4 @@ services:
     container_name: whosings-api
     build: .
     ports:
-      - '43261:43261'
+      - '49162:49162'

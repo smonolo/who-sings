@@ -5,7 +5,7 @@ import routes from './routes'
 
 const app = express()
 const isDev = process.env.NODE_ENV !== 'production'
-const port = 43261
+const port = 49162
 const corsOptions: CorsOptions = {
   origin: '*',
   methods: ['GET', 'OPTIONS'],
