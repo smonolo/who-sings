@@ -1,8 +1,8 @@
-import game from './game';
+import game from './game'
 
 export default [
-    {
-        route: '/game',
-        handler: game
-    }
-];
+  {
+    route: '/game',
+    handler: game
+  }
+]

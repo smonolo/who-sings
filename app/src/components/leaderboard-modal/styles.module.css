@@ -1,21 +1,21 @@
 .table {
-    width: 100%;
-    border-radius: 5px;
-    padding: 5px;
-    box-sizing: border-box;
-    background-color: #111;
+  width: 100%;
+  border-radius: 5px;
+  padding: 5px;
+  box-sizing: border-box;
+  background-color: #111;
 }
 
 .table th,
 .table td {
-    padding: 5px 10px;
-    box-sizing: border-box;
+  padding: 5px 10px;
+  box-sizing: border-box;
 }
 
 .table th {
-    text-align: left;
+  text-align: left;
 }
 
 .table td {
-    color: var(--color-light-gray);
+  color: var(--color-light-gray);
 }

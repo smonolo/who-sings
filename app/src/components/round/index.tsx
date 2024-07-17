@@ -1,188 +1,203 @@
-import { useEffect, useState } from 'react';
-
-import Layout from '@/components/layout';
-
-import { RootState } from '@/store';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { incrementRound, incrementScore, updateSelections } from '@/store/slices/game';
-
-import { shuffleArray } from '@/utils';
-
-import config from '@/config.json';
-
-import styles from '@/components/round/styles.module.css';
-import globalStyles from '@/app/styles.module.css';
+import { useEffect, useState } from 'react'
+import Layout from '@/components/layout'
+import { RootState } from '@/store'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import {
+  incrementRound,
+  incrementScore,
+  updateSelections
+} from '@/store/slices/game'
+import { shuffleArray } from '@/utils'
+import config from '@/config.json'
+import styles from '@/components/round/styles.module.css'
+import globalStyles from '@/app/styles.module.css'
 
 interface Data {
-    loaded: boolean;
-    lyrics: string[];
-    artists: string[];
-    artist: string;
+  loaded: boolean
+  lyrics: string[]
+  artists: string[]
+  artist: string
 }
 
 const initialData: Data = {
-    loaded: false,
-    lyrics: [],
-    artists: [],
-    artist: ''
-};
+  loaded: false,
+  lyrics: [],
+  artists: [],
+  artist: ''
+}
 
-const { game: { roundDuration } } = config;
+const {
+  game: { roundDuration }
+} = config
 
 export default function Round() {
-    const [data, setData] = useState<Data>(initialData);
-    const [selectionStatus, setSelectionStatus] = useState<string>('');
-    const [countdown, setCountdown] = useState<number>(roundDuration);
+  const [data, setData] = useState<Data>(initialData)
+  const [selectionStatus, setSelectionStatus] = useState<string>('')
+  const [countdown, setCountdown] = useState<number>(roundDuration)
 
-    const { currentRound, rounds, score } = useAppSelector((state: RootState) => state.game);
-    const dispatch = useAppDispatch();
+  const { currentRound, rounds, score } = useAppSelector(
+    (state: RootState) => state.game
+  )
+  const dispatch = useAppDispatch()
 
-    useEffect(() => {
-        fetchRoundData();
-    }, [currentRound]);
+  useEffect(() => {
+    fetchRoundData()
+  }, [currentRound])
 
-    useEffect(() => {
-        if (countdown > 0) {
-            if (data.loaded) {
-                const interval = setTimeout(() => {
-                    setCountdown(countdown => countdown - 1);
-                }, 1000);
-        
-                return () => clearTimeout(interval);
-            }
-        } else {
-            endWithoutSelection();
-        }
-    }, [countdown, data]);
+  useEffect(() => {
+    if (countdown > 0) {
+      if (data.loaded) {
+        const interval = setTimeout(() => {
+          setCountdown(countdown => countdown - 1)
+        }, 1000)
 
-    useEffect(() => {
-        setCountdown(roundDuration);
-    }, [currentRound]);
+        return () => clearTimeout(interval)
+      }
+    } else {
+      endWithoutSelection()
+    }
+  }, [countdown, data])
 
-    async function fetchRoundData() {
-        const { game: { chartCountry, chartName }, app: { apiUrl } } = config;
-        const roundDataResponse = await fetch(apiUrl + 'game/data?' + new URLSearchParams({
-            round: currentRound.toString(),
-            chartCountry: chartCountry,
-            chartName: chartName
-        }), {
-            method: 'get'
-        });
-        const roundData = await roundDataResponse.json();
+  useEffect(() => {
+    setCountdown(roundDuration)
+  }, [currentRound])
 
-        if (roundData.error) {
-            return;
-        }
+  async function fetchRoundData() {
+    const {
+      game: { chartCountry, chartName },
+      app: { apiUrl }
+    } = config
+    const roundDataResponse = await fetch(
+      apiUrl +
+        'game/data?' +
+        new URLSearchParams({
+          round: currentRound.toString(),
+          chartCountry: chartCountry,
+          chartName: chartName
+        }),
+      {
+        method: 'get'
+      }
+    )
+    const roundData = await roundDataResponse.json()
 
-        const formattedData = {
-            lyrics: roundData.lyrics.split('\n').splice(0, 3),
-            artists: shuffleArray([...roundData.artists, roundData.artist]),
-            artist: roundData.artist
-        };
-
-        setData({ loaded: true, ...formattedData });
+    if (roundData.error) {
+      return
     }
 
-    function nextRound() {
-        setTimeout(() => {
-            setData(initialData);
-            dispatch(incrementRound());
-            setSelectionStatus('');
-        }, 1000);
+    const formattedData = {
+      lyrics: roundData.lyrics.split('\n').splice(0, 3),
+      artists: shuffleArray([...roundData.artists, roundData.artist]),
+      artist: roundData.artist
     }
 
-    function endWithoutSelection() {
-        setSelectionStatus('error');
-        dispatch(updateSelections({
-            selected: 'Not selected',
-            correct: data.artist,
-            score: 0
-        }));
+    setData({ loaded: true, ...formattedData })
+  }
 
-        nextRound();
+  function nextRound() {
+    setTimeout(() => {
+      setData(initialData)
+      dispatch(incrementRound())
+      setSelectionStatus('')
+    }, 1000)
+  }
+
+  function endWithoutSelection() {
+    setSelectionStatus('error')
+    dispatch(
+      updateSelections({
+        selected: 'Not selected',
+        correct: data.artist,
+        score: 0
+      })
+    )
+
+    nextRound()
+  }
+
+  function selectArtist(name: string) {
+    const isCorrectAnswer = name === data.artist
+
+    if (isCorrectAnswer) {
+      setSelectionStatus('success')
+      dispatch(incrementScore())
+    } else {
+      setSelectionStatus('error')
     }
 
-    function selectArtist(name: string) {
-        const isCorrectAnswer = name === data.artist;
+    dispatch(
+      updateSelections({
+        selected: name,
+        correct: data.artist,
+        score: isCorrectAnswer ? 100 : 0
+      })
+    )
 
-        if (isCorrectAnswer) {
-            setSelectionStatus('success');
-            dispatch(incrementScore());
-        } else {
-            setSelectionStatus('error');
-        }
+    nextRound()
+  }
 
-        dispatch(updateSelections({
-            selected: name,
-            correct: data.artist,
-            score: isCorrectAnswer ? 100 : 0
-        }));
-
-        nextRound();
-    }
-
-    if (!data.loaded) {
-        return (
-            <Layout
-                title='Who Sings?'
-                subtitle={`Round ${currentRound}/${rounds} | ${countdown}s`}
-            >
-                <div className={globalStyles.spacer}>
-                    <div className={styles.loading}>
-                        Loading round...
-                    </div>
-                </div>
-            </Layout>
-        );
-    }
-
+  if (!data.loaded) {
     return (
-        <Layout
-            title='Who Sings?'
-            subtitle={`Round ${currentRound}/${rounds} | ${countdown}s`}
+      <Layout
+        title="Who Sings?"
+        subtitle={`Round ${currentRound}/${rounds} | ${countdown}s`}
+      >
+        <div className={globalStyles.spacer}>
+          <div className={styles.loading}>Loading round...</div>
+        </div>
+      </Layout>
+    )
+  }
+
+  return (
+    <Layout
+      title="Who Sings?"
+      subtitle={`Round ${currentRound}/${rounds} | ${countdown}s`}
+    >
+      <div className={styles.pointsRow}>
+        <div />
+        <div className={styles.points}>{score} points</div>
+        {selectionStatus === 'success' && (
+          <div className={styles.selectionSuccess}>Correct!</div>
+        )}
+        {selectionStatus === 'error' && (
+          <div className={styles.selectionError}>Wrong!</div>
+        )}
+      </div>
+      <div className={globalStyles.spacer}>
+        <div
+          className={
+            globalStyles.card + ' ' + styles.card + ' ' + styles.cardLyrics
+          }
         >
-            <div className={styles.pointsRow}>
-                <div />
-                <div className={styles.points}>
-                    {score} points
-                </div>
-                {selectionStatus === 'success' && (
-                    <div className={styles.selectionSuccess}>
-                        Correct!
-                    </div>
-                )}
-                {selectionStatus === 'error' && (
-                    <div className={styles.selectionError}>
-                        Wrong!
-                    </div>
-                )}
+          {data.lyrics.map((line, index) => (
+            <div key={index}>{line}</div>
+          ))}
+        </div>
+      </div>
+      <div className={styles.info}>
+        <i className="bi bi-info-circle" />
+        Hover over text to reveal hidden lyrics
+      </div>
+      <div className={globalStyles.spacer}>
+        <div className={styles.row}>
+          {data.artists.map((artist, index) => (
+            <div
+              key={index}
+              className={
+                globalStyles.card +
+                ' ' +
+                styles.card +
+                ' ' +
+                styles.cardSelection
+              }
+              onClick={() => !selectionStatus && selectArtist(artist)}
+            >
+              {artist}
             </div>
-            <div className={globalStyles.spacer}>
-                <div className={globalStyles.card + ' ' + styles.card + ' ' + styles.cardLyrics}>
-                    {data.lyrics.map((line, index) => (
-                        <div key={index}>
-                            {line}
-                        </div>
-                    ))}
-                </div>
-            </div>
-            <div className={styles.info}>
-                <i className='bi bi-info-circle' />
-                Hover over text to reveal hidden lyrics
-            </div>
-            <div className={globalStyles.spacer}>
-                <div className={styles.row}>
-                    {data.artists.map(((artist, index) => (
-                        <div
-                            key={index}
-                            className={globalStyles.card + ' ' + styles.card + ' ' + styles.cardSelection}
-                            onClick={() => !selectionStatus && selectArtist(artist)}
-                        >
-                            {artist}
-                        </div>
-                    )))}
-                </div>
-            </div>
-        </Layout>
-    );
+          ))}
+        </div>
+      </div>
+    </Layout>
+  )
 }

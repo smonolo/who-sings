@@ -1,10 +1,10 @@
 {
-    "game": {
-        "roundDuration": 60,
-        "chartCountry": "it",
-        "chartName": "hot"
-    },
-    "app": {
-        "apiUrl": "http://localhost:8080/"
-    }
+  "game": {
+    "roundDuration": 60,
+    "chartCountry": "it",
+    "chartName": "hot"
+  },
+  "app": {
+    "apiUrl": "http://localhost:8080/"
+  }
 }

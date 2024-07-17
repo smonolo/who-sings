@@ -1,25 +1,20 @@
-import { ReactNode } from 'react';
-
-import styles from '@/components/layout/styles.module.css';
+import { ReactNode } from 'react'
+import styles from '@/components/layout/styles.module.css'
 
 interface Props {
-    title: string;
-    subtitle: string;
-    children: ReactNode;
+  title: string
+  subtitle: string
+  children: ReactNode
 }
 
 export default function Layout(props: Props) {
-    return (
-        <div className={styles.container}>
-            <div className={styles.box}>
-                <div className={styles.title}>
-                    {props.title}
-                </div>
-                <div className={styles.subtitle}>
-                    {props.subtitle}
-                </div>
-                {props.children}
-            </div>
-        </div>
-    );
+  return (
+    <div className={styles.container}>
+      <div className={styles.box}>
+        <div className={styles.title}>{props.title}</div>
+        <div className={styles.subtitle}>{props.subtitle}</div>
+        {props.children}
+      </div>
+    </div>
+  )
 }

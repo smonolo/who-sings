@@ -1,88 +1,100 @@
-import axios from 'axios';
-
-import { apiKey, apiUrl } from '../utils/constants';
+import axios from 'axios'
+import { apiKey, apiUrl } from '../utils/constants'
 
 interface ChartTracksOptions {
-    chartCountry: string;
-    chartName: string;
+  chartCountry: string
+  chartName: string
 }
 
-export async function getChartTracks(round: number, options: ChartTracksOptions) {
-    const { chartCountry, chartName } = options;
-    const response = await axios.get(
-        apiUrl + 'chart.tracks.get?' + new URLSearchParams({
-            chart_name: chartName,
-            page: round.toString(),
-            page_size: '1',
-            country: chartCountry,
-            f_has_lyrics: '1',
-            apikey: apiKey
-        })
-    );
+export async function getChartTracks(
+  round: number,
+  options: ChartTracksOptions
+) {
+  const { chartCountry, chartName } = options
+  const response = await axios.get(
+    apiUrl +
+      'chart.tracks.get?' +
+      new URLSearchParams({
+        chart_name: chartName,
+        page: round.toString(),
+        page_size: '1',
+        country: chartCountry,
+        f_has_lyrics: '1',
+        apikey: apiKey
+      })
+  )
 
-    if (!response || !response.data) {
-        return {
-            error: 'Failed to retrieve chart tracks.'
-        };
-    }
-
-    const { message: { header, body } } = response.data;
-
-    if (header.status_code !== 200) {
-        return {
-            error: 'Unable to retrieve chart tracks.'
-        };
-    }
-    
-    const { track_list } = body;
-    const { track: { track_id, artist_name } } = track_list[0];
-
-    if (!track_id) {
-        return {
-            error: 'Unable to retrieve track ID.'
-        };
-    }
-
-    if (!artist_name) {
-        return {
-            error: 'Unable to retrieve track artist.'
-        };
-    }
-
+  if (!response || !response.data) {
     return {
-        track_id,
-        artist_name
-    };
+      error: 'Failed to retrieve chart tracks.'
+    }
+  }
+
+  const {
+    message: { header, body }
+  } = response.data
+
+  if (header.status_code !== 200) {
+    return {
+      error: 'Unable to retrieve chart tracks.'
+    }
+  }
+
+  const { track_list } = body
+  const {
+    track: { track_id, artist_name }
+  } = track_list[0]
+
+  if (!track_id) {
+    return {
+      error: 'Unable to retrieve track ID.'
+    }
+  }
+
+  if (!artist_name) {
+    return {
+      error: 'Unable to retrieve track artist.'
+    }
+  }
+
+  return {
+    track_id,
+    artist_name
+  }
 }
 
 export async function getChartArtists(round: number) {
-    const response = await axios.get(
-        apiUrl + 'chart.artists.get?' + new URLSearchParams({
-            page: round.toString(),
-            page_size: '2',
-            country: 'it',
-            apikey: apiKey
-        })
-    );
+  const response = await axios.get(
+    apiUrl +
+      'chart.artists.get?' +
+      new URLSearchParams({
+        page: round.toString(),
+        page_size: '2',
+        country: 'it',
+        apikey: apiKey
+      })
+  )
 
-    if (!response || !response.data) {
-        return {
-            error: 'Failed to retrieve chart artists.'
-        };
-    }
-
-    const { message: { header, body } } = response.data;
-
-    if (header.status_code !== 200) {
-        return {
-            error: 'Unable to retrieve chart artists.'
-        };
-    }
-
-    const { artist_list } = body;
-    const artists = artist_list.map((a: any) => a.artist.artist_name);
-
+  if (!response || !response.data) {
     return {
-        artists
-    };
+      error: 'Failed to retrieve chart artists.'
+    }
+  }
+
+  const {
+    message: { header, body }
+  } = response.data
+
+  if (header.status_code !== 200) {
+    return {
+      error: 'Unable to retrieve chart artists.'
+    }
+  }
+
+  const { artist_list } = body
+  const artists = artist_list.map((a: any) => a.artist.artist_name)
+
+  return {
+    artists
+  }
 }
