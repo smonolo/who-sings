@@ -1,7 +1,6 @@
 import express from 'express'
 import cors, { CorsOptions } from 'cors'
 import morgan from 'morgan'
-
 import routes from './routes'
 
 const app = express()
@@ -26,9 +25,7 @@ app.use(cors(corsOptions))
 
 app.options('*', cors(corsOptions))
 
-routes.forEach(({ route, handler }) => {
-  app.use(route, handler)
-})
+routes.forEach(({ route, handler }) => app.use(route, handler))
 
 app.use('*', (_, res) => {
   res.status(404).json({
