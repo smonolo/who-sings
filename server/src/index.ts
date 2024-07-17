@@ -1,7 +1,3 @@
-import * as dotenv from 'dotenv'
-
-dotenv.config()
-
 import express from 'express'
 import cors, { CorsOptions } from 'cors'
 import morgan from 'morgan'
@@ -10,6 +6,7 @@ import routes from './routes'
 
 const app = express()
 const isDev = process.env.NODE_ENV !== 'production'
+const port = 43261
 const corsOptions: CorsOptions = {
   origin: '*',
   methods: ['GET', 'OPTIONS'],
@@ -40,6 +37,6 @@ app.use('*', (_, res) => {
   })
 })
 
-app.listen(8080, () => {
+app.listen(port, () => {
   console.log('Server running')
 })
