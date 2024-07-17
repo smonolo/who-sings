@@ -2,5 +2,6 @@ services:
   whosings_api:
     container_name: whosings-api
     build: .
+    image: smonolo/whosings-api
     ports:
       - '49162:49162'
