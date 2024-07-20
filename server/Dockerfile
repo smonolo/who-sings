@@ -1,14 +1,20 @@
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+COPY package*.json /app
+RUN npm ci
+
+COPY . /app
+RUN npm run build
+
 FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package.json .
-COPY package-lock.json .
-COPY . .
+COPY package*.json /app
+RUN npm ci --omit=dev
 
-RUN npm ci
-RUN npm run build
+COPY --from=builder /app/dist /app/dist
 
-EXPOSE 49162
-
-CMD ["node", "dist/index.js"]
+CMD ["node", "/app/dist/index.js"]

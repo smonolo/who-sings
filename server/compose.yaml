@@ -1,5 +1,5 @@
 services:
-  whosings_api:
+  whosings-api:
     container_name: whosings-api
     build: .
     image: smonolo/whosings-api
